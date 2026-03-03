@@ -17,7 +17,7 @@ export default function ReaderContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { uploadEpub, uploading, error } = useEpubUpload();
-  const { goToChapter, goNext, goPrev } = useReader(containerRef, book);
+  const { goToChapter } = useReader(containerRef, book, setCurrentIndex);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -34,6 +34,16 @@ export default function ReaderContent() {
   function handleChapterSelect(href: string, index: number) {
     setCurrentIndex(index);
     goToChapter(href);
+  }
+
+  function handlePrev() {
+    const prev = chapters[currentIndex - 1];
+    if (prev) goToChapter(prev.href);
+  }
+
+  function handleNext() {
+    const next = chapters[currentIndex + 1];
+    if (next) goToChapter(next.href);
   }
 
   function handleBackToLibrary() {
@@ -111,14 +121,16 @@ export default function ReaderContent() {
           </span>
           <div className="flex gap-2">
             <button
-              onClick={goPrev}
-              className="text-sm px-3 py-1 rounded hover:bg-gray-100 text-gray-600 transition-colors"
+              onClick={handlePrev}
+              disabled={currentIndex === 0}
+              className="text-sm px-3 py-1 rounded hover:bg-gray-100 text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               Prev
             </button>
             <button
-              onClick={goNext}
-              className="text-sm px-3 py-1 rounded hover:bg-gray-100 text-gray-600 transition-colors"
+              onClick={handleNext}
+              disabled={currentIndex === chapters.length - 1}
+              className="text-sm px-3 py-1 rounded hover:bg-gray-100 text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               Next
             </button>

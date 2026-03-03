@@ -5,7 +5,7 @@ export function mountBook(book: Book, containerEl: HTMLElement): Rendition {
     width: "100%",
     height: "100%",
     flow: "scrolled-doc",
-    manager: "continuous",
+    allowScriptedContent: true,
   });
 }
 
