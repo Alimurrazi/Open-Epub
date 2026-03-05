@@ -30,7 +30,7 @@ export default function useReader(
       rendition.destroy();
       renditionRef.current = null;
     };
-  }, [book]);
+  }, [book, containerRef]);
 
   const goToChapter = useCallback((href: string) => {
     if (!renditionRef.current) return;
