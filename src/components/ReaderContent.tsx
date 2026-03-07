@@ -14,15 +14,12 @@ export default function ReaderContent() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { uploadEpub, uploading, error } = useEpubUpload();
   const { goToChapter } = useReader(containerRef, book, setCurrentIndex);
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const result = await uploadEpub(file);
+  async function handleOpenFile() {
+    const result = await uploadEpub();
     if (result) {
       setBook(result.book);
       setMeta(result.meta);
@@ -66,7 +63,7 @@ export default function ReaderContent() {
             <p className="text-gray-500 text-sm">Parsing book…</p>
           ) : (
             <button
-              onClick={() => fileInputRef.current?.click()}
+              onClick={handleOpenFile}
               className="px-6 py-2.5 bg-[#7c5cbf] text-white rounded-lg text-sm font-medium hover:bg-[#6a4daa] transition-colors"
             >
               Open EPUB File
@@ -74,14 +71,6 @@ export default function ReaderContent() {
           )}
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".epub"
-            className="hidden"
-            onChange={handleFileChange}
-          />
         </div>
       </div>
     );

@@ -3,17 +3,17 @@ import { NavItem } from "epubjs/types/navigation";
 import { BookMeta, Chapter } from "@/types/book";
 
 export async function parseEpub(
-  file: File
+  buffer: ArrayBuffer,
+  fileName: string
 ): Promise<{ book: Book; meta: BookMeta; chapters: Chapter[] }> {
-  const arrayBuffer = await file.arrayBuffer();
-  const book = Epub(arrayBuffer);
+  const book = Epub(buffer);
 
   await book.ready;
 
   const metadata = await book.loaded.metadata;
   const nav = await book.loaded.navigation;
 
-  const title = metadata.title || file.name.replace(/\.epub$/i, "");
+  const title = metadata.title || fileName.replace(/\.epub$/i, "");
   const author = metadata.creator || "Unknown Author";
   const language = metadata.language || "en";
 
